@@ -9,7 +9,7 @@ import html2text
 def scrap(google_link):  # headline, website_keywords, description, body, date, source_link, keyword
     url = google_link['source_link']
     keyword = google_link['keyword']
-    
+
     page = {"source_link": url, "keyword": keyword}
     print("Fetching", url, end=' ')
     response = None
