@@ -1,17 +1,18 @@
 import scrappers.aa_com_tr as aa_com_tr
 import scrappers.common as common
 from scrappers.utils import read_json_files, save_json
+from urllib.parse import urlparse
 import pandas as pd
+import os
 
 # Extract text from pages' HTML
 os.makedirs("scrapped/", exist_ok = True)
 os.makedirs("server_error/", exist_ok = True)
 os.makedirs("failed/", exist_ok = True)
 google_links_df = pd.read_csv('main_1.csv')
-for i, google_link in google_links_df.iterrows():
+for google_link in google_links_df.to_dict(orient="records"):
     page = None
-    parsed_url = urlparse(google_link['source_link'])
-    if "aa.com.tr" in parsed_url.netloc:
+    if "aa.com.tr" in urlparse(google_link['source_link']).netloc:
         page = aa_com_tr.scrap(google_link)
     else:
         page = common.scrap(google_link)
@@ -25,5 +26,4 @@ for i, google_link in google_links_df.iterrows():
 
 # Clean and save data in one CSV
 df = pd.DataFrame(read_json_files("scrapped/"))
-df = df.drop_duplicates(subset=['source_link'])
 df.to_csv('main_2.csv', index=False)

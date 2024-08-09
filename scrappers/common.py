@@ -22,7 +22,7 @@ def scrap(google_link):  # headline, website_keywords, description, body, date, 
         soup = BeautifulSoup(response.content, 'html.parser')
         schema = parse_schema(soup)
         page["headline"] = schema["headline"]
-        page["website_keywords"] = schema["keywords"]
+        # page["website_keywords"] = schema["keywords"]
         page["description"] = schema["description"]
 
         body = schema["articleBody"]

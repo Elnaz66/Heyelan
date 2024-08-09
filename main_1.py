@@ -1,10 +1,10 @@
 from apify_client import ApifyClient
 import pandas as pd
-from urllib.parse import urlparse
 from scrappers.utils import read_json_files, save_json, keywords
 import os
+
 # Extract links from Google
-os.makedirs("google_links/", exist_ok = True)
+os.makedirs("google_links/", exist_ok=True)
 for keyword in keywords:
     for website in ["aa.com.tr", "iha.com.tr", "cumhuriyet.com.tr", "milliyet.com.tr"]:
         for google_link in google.links(website, keyword):

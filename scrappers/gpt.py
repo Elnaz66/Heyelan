@@ -3,7 +3,6 @@ import json
 client = OpenAI(
     api_key="sk-proj-RcPWI0GSnveTG2aZI6R0T3BlbkFJQr2QadQAuqQnuhOlp64v")
 
-
 def is_real_incident(page) -> bool:
     print("Is", page['source_link'], "a real incident:", end=' ')
     prompt = """Is the following Turkish paragraph talking about a landslide (heyelan) incident that happenned, or just a warning or an explanation about the topic? If it was a real incident, did it happen in Turkey? Give me the result in the following JSON format: {{"landslide_incident_and_in_turkey": bool}}
@@ -12,9 +11,9 @@ Description: {description}
 Body:
 md
 {body}
-""".format(headline=page['headline'][:1500], description=page['description'][:1500], body=page['body'][:1500])
+""".format(headline=str(page['headline'])[:1500], description=str(page['description'])[:1500], body=str(page['body'])[:1500])
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-0125",
+        model="gpt-4o-mini",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": "You are a data analyst designed to output JSON."},
@@ -53,9 +52,9 @@ Body:
 ```md
 {body}
 ```
-""".format(headline=page['headline'][:1500], description=page['description'][:1500], body=page['body'][:1500])
+""".format(headline=str(page['headline'])[:1500], description=str(page['description'])[:1500], body=str(page['body'])[:1500])
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo-0125",
+        model="gpt-4o-mini",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": "You are a data analyst designed to output JSON."},
@@ -96,4 +95,3 @@ if __name__ == "__main__":
 
 
 # Pricing equation: \left(\frac{0.5}{10^{6}}\cdot2000+\frac{1.50}{10^{6}}\cdot30\right)\cdot1000
-# filter duplicate news

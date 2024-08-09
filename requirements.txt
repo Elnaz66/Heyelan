@@ -5,3 +5,4 @@ beautifulsoup4==4.12.3
 openai==1.28.0
 requests
 numpy==1.26.4
+unicode_tr

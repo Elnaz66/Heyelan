@@ -30,7 +30,7 @@ def scrap(google_link):  # headline, keywords, description, body, date
         page['headline'] = soup.find("title").get_text()
 
         keywords = soup.find("meta", {"name": "keywords"})['content']
-        page['website_keywords'] = re.split(r", ?", keywords)
+        # page['website_keywords'] = re.split(r", ?", keywords)
 
         page['description'] = soup.find(
             "meta", {"name": "description"}
