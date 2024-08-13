@@ -2,6 +2,7 @@ from apify_client import ApifyClient
 import pandas as pd
 from scrappers.utils import read_json_files, save_json, keywords
 import os
+import scrappers.google as google
 
 # Extract links from Google
 os.makedirs("google_links/", exist_ok=True)

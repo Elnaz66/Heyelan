@@ -32,23 +32,29 @@ df['köy'] = df['köy'].apply(lambda text: unicode_tr(text).lower())
 
 
 def compare_rows(a, b):  # Remove duplicates with a 3 day range
-    if a['il'] == b['il'] and a['ölu_sayısı'] == b['ölu_sayısı'] and a['yaralı_sayısı'] == b['yaralı_sayısı'] and a['ilçe'] and b['ilçe']:
+    if a['il'] == b['il'] and a['ölu_sayısı'] == b['ölu_sayısı'] and a['yaralı_sayısı'] == b['yaralı_sayısı']:
         diff = (a['date'] - b['date']) / np.timedelta64(1, 'D')
-        b_ilçeler = b['ilçe'].split(',')
-        for a_ilçe in a['ilçe'].split(','):
-            if a_ilçe in b_ilçeler:
-                if a['mahalle'] and b['mahalle']:
-                    b_mahalleler = b['mahalle'].split(',')
-                    for a_mahalle in a['mahalle'].split(','):
-                        if a_mahalle in b_mahalleler:
-                            if diff <= 3:
-                                return True
-                if a['köy'] and b['köy']:
-                    b_köy = b['köy'].split(',')
-                    for a_köy in a['köy'].split(','):
-                        if a_köy in b_köy:
-                            if diff <= 3:
-                                return True
+        
+        if a['ilçe'] and b['ilçe']:
+            b_ilçeler = b['ilçe'].split(',')
+            for a_ilçe in a['ilçe'].split(','):
+                if a_ilçe in b_ilçeler:
+                    if a['mahalle'] and b['mahalle']:
+                        b_mahalleler = b['mahalle'].split(',')
+                        for a_mahalle in a['mahalle'].split(','):
+                            if a_mahalle in b_mahalleler:
+                                if diff <= 3:
+                                    return True
+                    if a['köy'] and b['köy']:
+                        b_köy = b['köy'].split(',')
+                        for a_köy in a['köy'].split(','):
+                            if a_köy in b_köy:
+                                if diff <= 3:
+                                    return True
+                    if not a['mahalle'] and not b['mahalle'] and not a['köy'] and not b['köy']:
+                        return True
+        if not a['ilçe'] and not b['ilçe']:
+            return True
     return False
 
 
