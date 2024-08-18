@@ -24,6 +24,6 @@ for google_link in google_links_df.to_dict(orient="records"):
     else:
         save_json("failed/", google_link)
 
-# Clean and save data in one CSV
+# Save data in one CSV
 df = pd.DataFrame(read_json_files("scrapped/"))
 df.to_csv('main_2.csv', index=False)

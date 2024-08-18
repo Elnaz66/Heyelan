@@ -1,6 +1,6 @@
 apify-client
 html2text==2024.2.26
-pandas==2.0.3
+pandas
 beautifulsoup4==4.12.3
 openai==1.28.0
 requests

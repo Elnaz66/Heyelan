@@ -1,25 +1,25 @@
 from openai import OpenAI
 import json
+from unicode_tr import unicode_tr
+
 client = OpenAI(
     api_key="sk-proj-RcPWI0GSnveTG2aZI6R0T3BlbkFJQr2QadQAuqQnuhOlp64v")
 
+
 def is_real_incident(page) -> bool:
-    print (page)
     print("Is", page['source_link'], "a real incident:", end=' ')
     prompt = """Aşağıdaki paragraflarda anlatılan olayın mutlaka ve sadece yaşanmış bir heyelan olayı olması gerekmektedir. Bu olay, herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, geçmişte meydana gelen bir heyelan veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise, bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin. Sonucu bana şu JSON formatında verin: {{"turkiyenin_heyelan_haberleri": bool}}
 Headline: {headline}
 Description: {description}
 Body:
-md
+```md
 {body}
+```
 """.format(headline=str(page['headline'])[:1500], description=str(page['description'])[:1500], body=str(page['body'])[:1500])
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": "You are a data analyst designed to output JSON."},
-            {"role": "user", "content": prompt},
-        ]
+        messages=[{"role": "user", "content": prompt}]
     )
     try:
         result = json.loads(response.choices[0].message.content)
@@ -46,8 +46,7 @@ bana JSON formatında ver,
 "köy": str,
 "ölü_sayısı": int,
 "yaralı_sayısı": int,
-"kayıp_sayısı": int,
-
+"kayıp_sayısı": int
 }}
 ```
 Headline: {headline}
@@ -60,15 +59,32 @@ Body:
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": "You are a data analyst designed to output JSON."},
-            {"role": "user", "content": prompt},
-        ]
+        messages=[{"role": "user", "content": prompt}]
     )
     try:
         result = json.loads(response.choices[0].message.content)
-        page.update(result)
-        print("finished")
+        # Cleaning key names by converting everything to English, then back to Turkish
+        english = {}
+        for key, value in result.items():
+            key = unicode_tr(key).lower()
+            key = key.replace('ö', 'o')
+            key = key.replace('ü', 'u')
+            key = key.replace('ı', 'i')
+            key = key.replace('ç', 'c')
+            key = key.replace('ğ', 'c')
+            if key in ['il', 'ilce',  'koy', 'mahalle', 'olu_sayisi', 'yarali_sayisi', 'kayip_sayisi']:
+                english[key] = value
+
+        turkish = {
+            "il": english['il'],
+            "ilçe": english['ilce'],
+            "köy": english['koy'],
+            "mahalle": english['mahalle'],
+            "ölü_sayısı": english['olu_sayisi'],
+            "yaralı_sayısı": english['yarali_sayisi'],
+            "kayıp_sayısı": english['kayip_sayisi'],
+        }
+        page.update(turkish)
         return page
     except:
         print("Gpt iyi bir sonuç vermedi")
@@ -76,16 +92,12 @@ Body:
 
 
 if __name__ == "__main__":
-    # import common
-    # page = common.scrap(
-    #     "https://www.iha.com.tr/bursa-haberleri/heyelan-sonrasi-ucurumun-kenarindaki-otomobiller-boyle-kurtarildi-75614580", "heyelan")
-
     page = is_real_incident(
         {
             "source_link": "https://www.aa.com.tr/tr/turkiye/turkiyede-son-90-yilda-1343-kisi-heyelan-nedeniyle-hayatini-kaybetti/2120967",
             "keyword": "çamur akıntısı",
             "headline": "Türkiye'de son 90 yılda 1343 kişi heyelan nedeniyle hayatını kaybetti",
-            "description" : "Türkiye'de doğal afet kaynaklı kayıplar arasında depremden sonra en fazla ölüme neden olan heyelan, İTÜ Avrasya Yer Bilimleri Enstitüsü bünyesindeki araştırmaya konu oldu. - Anadolu Ajansı",
+            "description": "Türkiye'de doğal afet kaynaklı kayıplar arasında depremden sonra en fazla ölüme neden olan heyelan, İTÜ Avrasya Yer Bilimleri Enstitüsü bünyesindeki araştırmaya konu oldu. - Anadolu Ajansı",
             "body": """######  İstanbul
 
 İstanbul Teknik Üniversitesi (İTÜ) Avrasya Yer Bilimleri Enstitüsü
@@ -190,11 +202,7 @@ iletişime geçiniz.**
  """
         }
     )
-
-    # import aa_com_tr
-    # page = aa_com_tr.scrap(
-    #     "https://www.aa.com.tr/tr/gundem/istanbulun-karadenize-acilan-sahillerindeki-tehlike-rip-akintisi/2658797", "heyelan")
-
+    
     if page:
         if (is_real_incident(page)):
             gpt_page = read_news(page)

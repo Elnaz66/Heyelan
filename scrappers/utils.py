@@ -20,7 +20,6 @@ def save_json(directory, data):
         [int(f.split('.')[0]) for f in json_files(directory)],
         default=0
     )
-
     new_filename = f"{highest_number + 1}.json"
     with open(os.path.join(directory, new_filename), 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)

@@ -11,12 +11,6 @@ df = pd.read_csv('main_3.csv')
 
 df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
 
-df['yaralı_sayısı'] = df['yaralı_sayısı'].astype('Int64')
-df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
-
-df['ölu_sayısı'] = df['ölu_sayısı'].astype('Int64')
-df['ölu_sayısı'] = df['ölu_sayısı'].fillna(0)
-
 df['il'] = df['il'].fillna('')
 df['il'] = df['il'].apply(lambda text: unicode_tr(text).lower())
 df = df[df['il'].isin(turkey_cities)]
@@ -30,9 +24,20 @@ df['mahalle'] = df['mahalle'].apply(lambda text: unicode_tr(text).lower())
 df['köy'] = df['köy'].fillna('')
 df['köy'] = df['köy'].apply(lambda text: unicode_tr(text).lower())
 
+df['yaralı_sayısı'] = df['yaralı_sayısı'].astype('Int64')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
+
+df['ölü_sayısı'] = df['ölü_sayısı'].astype('Int64')
+df['ölü_sayısı'] = df['ölü_sayısı'].fillna(0)
+
+df['yaralı_sayısı'] = df['yaralı_sayısı'].astype('Int64')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
+
+df['kayıp_sayısı'] = df['kayıp_sayısı'].astype('Int64')
+df['kayıp_sayısı'] = df['kayıp_sayısı'].fillna(0)
 
 def compare_rows(a, b):  # Remove duplicates with a 3 day range
-    if a['il'] == b['il'] and a['ölu_sayısı'] == b['ölu_sayısı'] and a['yaralı_sayısı'] == b['yaralı_sayısı']:
+    if a['il'] == b['il'] and a['ölü_sayısı'] == b['ölü_sayısı'] and a['yaralı_sayısı'] == b['yaralı_sayısı']:
         diff = (a['date'] - b['date']) / np.timedelta64(1, 'D')
         
         if a['ilçe'] and b['ilçe']:
@@ -67,6 +72,3 @@ df = df[duplicates]
 
 
 df.to_csv("main_4.csv", index=False)
-
-
-# Added comment
