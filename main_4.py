@@ -11,29 +11,29 @@ df = pd.read_csv('main_3.csv')
 
 df['date'] = pd.to_datetime(df['date'], format='%d.%m.%Y')
 
-df['il'] = df['il'].fillna('')
+df['il'] = df['il'].replace('boş', '').fillna('')
 df['il'] = df['il'].apply(lambda text: unicode_tr(text).lower())
 df = df[df['il'].isin(turkey_cities)]
 
-df['ilçe'] = df['ilçe'].fillna('')
+df['ilçe'] = df['ilçe'].replace('boş', '').fillna('')
 df['ilçe'] = df['ilçe'].apply(lambda text: unicode_tr(text).lower())
 
-df['mahalle'] = df['mahalle'].fillna('')
+df['mahalle'] = df['mahalle'].replace('boş', '').fillna('')
 df['mahalle'] = df['mahalle'].apply(lambda text: unicode_tr(text).lower())
 
 df['köy'] = df['köy'].fillna('')
 df['köy'] = df['köy'].apply(lambda text: unicode_tr(text).lower())
 
-df['yaralı_sayısı'] = df['yaralı_sayısı'].astype('Int64')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].replace('boş', '0').astype('Int64')
 df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
-df['ölü_sayısı'] = df['ölü_sayısı'].astype('Int64')
+df['ölü_sayısı'] = df['ölü_sayısı'].replace('boş', '0').astype('Int64')
 df['ölü_sayısı'] = df['ölü_sayısı'].fillna(0)
 
-df['yaralı_sayısı'] = df['yaralı_sayısı'].astype('Int64')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].replace('boş', '0').astype('Int64')
 df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
-df['kayıp_sayısı'] = df['kayıp_sayısı'].astype('Int64')
+df['kayıp_sayısı'] = df['kayıp_sayısı'].replace('boş', '0').astype('Int64')
 df['kayıp_sayısı'] = df['kayıp_sayısı'].fillna(0)
 
 def compare_rows(a, b):  # Remove duplicates with a 3 day range
