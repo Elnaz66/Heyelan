@@ -36,7 +36,7 @@ def read_news(page):  # headline, website_keywords, description, body, date, sou
 `ölü_sayısı`'yı bulamadıysanız, boş bırak.
 `yaralı_sayısı`'yı bulamadıysanız, boş bırak.
 `kayıp_sayısı`'yı bulamadıysanız, boş bırak.
-`ölü_sayısı`, kayıp_sayısı veya `yaralı_sayısı`'ya hayvan ölümlerini, kayıpları veya yaralanmalarını dahil etmeyin. mahsur kalanlar, yaralı veya kayıp değillerdir.
+`ölü_sayısı`, kayıp_sayısı veya `yaralı_sayısı`'ya hayvan ölümlerini, kayıpları veya yaralanmalarını dahil etmeyin. mahsur kalanlar, yaralı veya kayıp değillerdir. Aşağıdaki paragraflarda anlatılan olayın mutlaka ve sadece yaşanmış bir heyelan olayı olması gerekmektedir. Bu olay, herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, geçmişte meydana gelen bir heyelan veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise, bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin.
 bana JSON formatında ver,
 ```json
 {{
