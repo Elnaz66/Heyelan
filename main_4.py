@@ -26,13 +26,17 @@ df['mahalle'] = df['mahalle'].apply(lambda text: unicode_tr(text).lower())
 df['köy'] = df['köy'].fillna('')
 df['köy'] = df['köy'].apply(lambda text: unicode_tr(text).lower())
 
-df['yaralı_sayısı'] = df['yaralı_sayısı'].astype(int, errors='ignore')
+df['yaralı_sayısı'] = pd.to_numeric(df['yaralı_sayısı'], errors='coerce')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
-df['ölü_sayısı'] = df['ölü_sayısı'].astype(int, errors='ignore')
+df['ölü_sayısı'] = pd.to_numeric(df['ölü_sayısı'], errors='coerce')
+df['ölü_sayısı'] = df['ölü_sayısı'].fillna(0)
 
-df['yaralı_sayısı'] = df['yaralı_sayısı'].astype(int, errors='ignore')
+df['yaralı_sayısı'] = pd.to_numeric(df['yaralı_sayısı'], errors='coerce')
+df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
-df['kayıp_sayısı'] = df['kayıp_sayısı'].astype(int, errors='ignore')
+df['kayıp_sayısı'] = pd.to_numeric(df['kayıp_sayısı'], errors='coerce')
+df['kayıp_sayısı'] = df['kayıp_sayısı'].fillna(0)
 
 
 def compare_rows(a, b):  # Remove duplicates with a 3 day range
@@ -62,10 +66,12 @@ def compare_rows(a, b):  # Remove duplicates with a 3 day range
     return False
 
 
-duplicates = [True] * len(df.index)
+duplicates = [True] * len(df)
 for i in range(1, len(df)):
     for j in range(i):
         if compare_rows(df.iloc[i], df.iloc[j]):
+            print('duplicate', i, j)
+            duplicates[i] = False
             duplicates[j] = False
 df = df[duplicates]
 
