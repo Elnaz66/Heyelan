@@ -6,6 +6,8 @@ import numpy as np
 from scrappers.utils import turkey_cities
 from unicode_tr import unicode_tr
 
+
+
 # Cleaning data
 df = pd.read_csv('main_3.csv')
 
@@ -31,9 +33,6 @@ df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
 df['ölü_sayısı'] = pd.to_numeric(df['ölü_sayısı'], errors='coerce')
 df['ölü_sayısı'] = df['ölü_sayısı'].fillna(0)
-
-df['yaralı_sayısı'] = pd.to_numeric(df['yaralı_sayısı'], errors='coerce')
-df['yaralı_sayısı'] = df['yaralı_sayısı'].fillna(0)
 
 df['kayıp_sayısı'] = pd.to_numeric(df['kayıp_sayısı'], errors='coerce')
 df['kayıp_sayısı'] = df['kayıp_sayısı'].fillna(0)

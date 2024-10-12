@@ -8,7 +8,12 @@ client = OpenAI(
 
 def is_real_incident(page) -> bool:
     print("Is", page['source_link'], "a real incident:", end=' ')
-    prompt = """Aşağıdaki paragraflarda anlatılan olayın mutlaka ve sadece yaşanmış bir heyelan olayı olması gerekmektedir. Bu olay, herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, geçmişte meydana gelen bir heyelan veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise, bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin. Sonucu bana şu JSON formatında verin: {{"turkiyenin_heyelan_haberleri": bool}}
+    prompt = """Aşağıdaki paragraflarda anlatılan olayın kesinlikle ve mutlaka yaşanmış bir heyelan olayı olması gerekmektedir. Bu haber, kesinlikle herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise(hertürlü heyelan olabılır doğal veya antropojenik ), bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin. Haberlerin doğruluğunu kontrol ederken, olayın heyelan olup olmadığını tespit edin(hertürlü heyelan olabılır doğal veya antropojenik ). Eğer olay bir heyelan ise, bu heyelan mutlaka Türkiye'de yaşanmış olmalıdır ve haber üzerinde işlemlere devam edin.
+Ölü sayısı, kayıp sayısı veya yaralı sayısı gibi verilerde kesinlikle, hayvan, büyükbaş ve benzerini dahil etmeyin. Mahsur kalanlar, yaralı veya kayıp olarak kabul edilmez.
+Aşağıdaki paragraflarda anlatılan olay mutlaka ve sadece yaşanmış bir heyelan olayı olmalıdır. Bu olay, kesinlikle herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma veya geçmişte meydana gelen bir heyelan ya da bu konuyla ilgili bir açıklama olmamalıdır. Heyelanı tetikleyen tüm faktörler, doğal heyelanlar(kaya parçaların düşmesi) veya antropojenik (insan kaynaklı ve faaliyetleri, maden göçüğü olayı) heyelanlar da dahil olmak üzere, bu kapsamda değerlendirilmelidir.
+ Haberde heyelanın meydana geldiği tarih belirtiliyorsa, mesela kaç gün önce meydana geldiği gibi, bu tarihi de çıkarılsın. Olay, haberin yayımlandığı gün değil, birkaç gün veya hafta önce olabilir. Bu tarih haberde varsa çıkarılsın.
+Haberde anlatılan heyelan olayının tetikleyen (örneğin, çamur akıntısı, moloz akıntısı, kaya düşmesi, deprem vb.) varsa bunu da belirtin (haberde geçen tüm heyelan sebepleri virgül ile ayırlanarak belirtilsin) parantez içerisinde "doğal" heyelan mı "antropojenik" mı belirlensin . Eğer haberde birden fazla heyelan olayı anlatılıyorsa, bu olayların her birini ayrı ayrı tanımlayın ve her birinin tarihini ve türünü de belirtin.
+Bana JSON formatında ver. {{"turkiyenin_heyelan_haberleri": bool}}
 Headline: {headline}
 Description: {description}
 Body:
@@ -32,12 +37,12 @@ Body:
 
 def read_news(page):  # headline, website_keywords, description, body, date, source_link, keyword, il, ilçe, mahalle, köy, ölü_sayısı, yaralı_sayısı
     print("Reading", page['source_link'], ":", end=' ')
-    prompt = """Olay bir `mahalle`de meydana geldiyse, `köy`'ü boş bırak. Öte yandan, olay bir `köy`de meydana geldiyse, `mahalle`'i boş bırak.
-`ölü_sayısı`'yı bulamadıysanız, boş bırak.
-`yaralı_sayısı`'yı bulamadıysanız, boş bırak.
-`kayıp_sayısı`'yı bulamadıysanız, boş bırak.
-`ölü_sayısı`, kayıp_sayısı veya `yaralı_sayısı`'ya hayvan ölümlerini, kayıpları veya yaralanmalarını dahil etmeyin. mahsur kalanlar, yaralı veya kayıp değillerdir. Aşağıdaki paragraflarda anlatılan olayın mutlaka ve sadece yaşanmış bir heyelan olayı olması gerekmektedir. Bu olay, herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, geçmişte meydana gelen bir heyelan veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise, bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin.
-bana JSON formatında ver,
+    prompt = """Aşağıdaki paragraflarda anlatılan olayın kesinlikle ve mutlaka yaşanmış bir heyelan olayı olması gerekmektedir. Bu haber, kesinlikle herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma, veya konuya ilişkin bir açıklama olmamalıdır. Eğer olay gerçek bir heyelan olayı ise(hertürlü heyelan olabılır doğal veya antropojenik ), bu olayın Türkiye'de yaşanıp yaşanmadığını belirleyin. Haberlerin doğruluğunu kontrol ederken, olayın heyelan olup olmadığını tespit edin(hertürlü heyelan olabılır doğal veya antropojenik ). Eğer olay bir heyelan ise, bu heyelan mutlaka Türkiye'de yaşanmış olmalıdır ve haber üzerinde işlemlere devam edin.
+Ölü sayısı, kayıp sayısı veya yaralı sayısı gibi verilerde kesinlikle, hayvan, büyükbaş ve benzerini dahil etmeyin. Mahsur kalanlar, yaralı veya kayıp olarak kabul edilmez.
+Aşağıdaki paragraflarda anlatılan olay mutlaka ve sadece yaşanmış bir heyelan olayı olmalıdır. Bu olay, kesinlikle herhangi bir uyarı, araştırma, inceleme, bilimsel çalışma veya geçmişte meydana gelen bir heyelan ya da bu konuyla ilgili bir açıklama olmamalıdır. Heyelanı tetikleyen tüm faktörler, doğal heyelanlar(kaya parçaların düşmesi) veya antropojenik (insan kaynaklı ve faaliyetleri, maden göçüğü olayı) heyelanlar da dahil olmak üzere, bu kapsamda değerlendirilmelidir.
+ Haberde heyelanın meydana geldiği tarih belirtiliyorsa, mesela kaç gün önce meydana geldiği gibi, bu tarihi de çıkarılsın. Olay, haberin yayımlandığı gün değil, birkaç gün veya hafta önce olabilir. Bu tarih haberde varsa çıkarılsın.
+Haberde anlatılan heyelan olayının tetikleyen (örneğin, çamur akıntısı, moloz akıntısı, kaya düşmesi, deprem vb.) varsa bunu da belirtin (haberde geçen tüm heyelan sebepleri virgül ile ayırlanarak belirtilsin) parantez içerisinde "doğal" heyelan mı "antropojenik" mı belirlensin . Eğer haberde birden fazla heyelan olayı anlatılıyorsa, bu olayların her birini ayrı ayrı tanımlayın ve her birinin tarihini ve türünü de belirtin.
+Bana JSON formatında ver. {{"turkiyenin_heyelan_haberleri": bool}}
 ```json
 {{
 "il": str,
@@ -46,7 +51,10 @@ bana JSON formatında ver,
 "köy": str,
 "ölü_sayısı": int,
 "yaralı_sayısı": int,
-"kayıp_sayısı": int
+"kayıp_sayısı": int,
+"heyelan_sebebi":str,
+"olayın_gerçek_tarıhı":str,
+"heyelan_sayısı":int
 }}
 ```
 Headline: {headline}
@@ -72,7 +80,7 @@ Body:
             key = key.replace('ı', 'i')
             key = key.replace('ç', 'c')
             key = key.replace('ğ', 'c')
-            if key in ['il', 'ilce',  'koy', 'mahalle', 'olu_sayisi', 'yarali_sayisi', 'kayip_sayisi']:
+            if key in ['il', 'ilce',  'koy', 'mahalle', 'olu_sayisi', 'yarali_sayisi', 'kayip_sayisi','heyelan_sebebi','olayin_gercek_tarihi', 'heyelan_sayisi']:
                 english[key] = value
 
         turkish = {
@@ -83,12 +91,16 @@ Body:
             "ölü_sayısı": english['olu_sayisi'],
             "yaralı_sayısı": english['yarali_sayisi'],
             "kayıp_sayısı": english['kayip_sayisi'],
+            "heyelan_sebebi":english['heyelan_sebebi'],
+            "olayın_gerçek_tarıhı":english['olayin_gercek_tarihi'],
+            "heyelan_sayısı":english['heyelan_sayisi'], 
         }
         page.update(turkish)
         return page
     except:
         print("Gpt iyi bir sonuç vermedi")
         return {}
+
 
 
 if __name__ == "__main__":
